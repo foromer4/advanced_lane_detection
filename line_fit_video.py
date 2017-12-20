@@ -6,10 +6,9 @@ import pickle
 from combined_thresh import combined_thresh
 from perspective_transform import perspective_transform
 from Line import Line
-from line_fit import line_fit, tune_fit, final_viz, calc_curve, calc_vehicle_offset
+from line_fit import line_fit, tune_fit, final_viz, calc_curve, calc_vehicle_offset , omer_viz2
 from moviepy.editor import VideoFileClip
-
-
+f
 # Global variables (just to make the moviepy video annotation work)
 with open('calibrate_camera.p', 'rb') as f:
 	save_dict = pickle.load(f)
@@ -87,9 +86,11 @@ def annotate_image(img_in):
 	vehicle_offset = calc_vehicle_offset(undist, left_fit, right_fit)
 
 	# Perform final visualization on top of original undistorted image
-	result = final_viz(undist, left_fit, right_fit, m_inv, left_curve, right_curve, vehicle_offset)
+	result1 = final_viz(undist, left_fit, right_fit, m_inv, left_curve, right_curve, vehicle_offset , binary_warped)
+	result2 = omer_viz2(binary_warped, ret)
+	final_result = np.vstack((result1, result2))
 
-	return result
+	return final_result
 
 
 def annotate_video(input_file, output_file):
@@ -104,10 +105,10 @@ if __name__ == '__main__':
 	annotate_video('project_video.mp4', 'out.mp4')
 
 	# Show example annotated image on screen for sanity check
-	img_file = 'test_images/test2.jpg'
-	img = mpimg.imread(img_file)
-	result = annotate_image(img)
-	result = annotate_image(img)
-	result = annotate_image(img)
-	plt.imshow(result)
-	plt.show()
+	# img_file = '/home/omer/work/temp/direct_video.mp4'
+	# img = mpimg.imread(img_file)
+	# result = annotate_image(img)
+	# result = annotate_image(img)
+	# result = annotate_image(img)
+	# plt.imshow(result)
+	# plt.show()
