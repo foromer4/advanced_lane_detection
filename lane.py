@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import cv2
+from geo_helper import Line,Point
 class Lane:
 
     def __init__(self):
@@ -19,7 +20,7 @@ class Lane:
     def draw_lines_on_image(self, lines, image: np.ndarray):
         if lines is not None:
             for line in lines:
-                cv2.line(img=image, pt1=(line[2], line[3]), pt2=(line[4], line[5]), color=(0, 0, 255),
+                cv2.line(img=image, pt1=(line.p1.x, line.p1.y), pt2=(line.p2.x, line.p2.y), color=(0, 0, 255),
                          thickness=2)
         return image
 
@@ -84,12 +85,13 @@ class Lane:
                 y1 = int(y0 + 1000 * (a))
                 x2 = int(x0 - 1000 * (-b))
                 y2 = int(y0 - 1000 * (a))
-                self.__update_lines(found_lines,(x0, y0, x1,y1,x2,y2), img_with_lines)
+                new_line = Line(Point(x1,y1), Point(x2,y2))
+                self.__update_lines(found_lines,new_line, img_with_lines)
             self.draw_lines_on_image(found_lines, img_with_lines)
         return found_lines, img_with_lines
 
 
-    def __update_lines(self, lines: list, new_line: tuple, image: np.ndarray):
+    def __update_lines(self, lines: list, new_line: Line, image: np.ndarray):
         if len(lines) >= self.max_lines:
             return
         found_close_line = False
@@ -101,10 +103,15 @@ class Lane:
         if not found_close_line:
             lines.append(new_line)
 
-    def __lines_are_close(self, line1 , line2):
-        #x0,y0, x1,y1,x2,y2 , compare by x2
-        close_line_threshold = 50
-        return abs(line1[0] - line2[0]) < close_line_threshold or abs(line1[2] - line2[2]) < close_line_threshold\
-               or abs(line1[4] - line2[4]) < close_line_threshold
+    def __lines_are_close(self, line1 : Line , line2 : Line):
+        if line1.intersect(line2) or line1.is_close_to(line2):
+            print('found intersection: {0} , {1}'.format(line1, line2))
+            return True
+        return False
+
+
+
+
+
 
 
