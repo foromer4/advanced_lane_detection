@@ -1,6 +1,9 @@
 {
   "in_file" : "img1.jpg",
   "out_file": "output_images/img1_ipt.jpg",
-  "src": [[50, 720], [900, 720],[580, 387],    [680, 385]],
-  "dest" : [[400, 1100],[600, 1100],[400, 0],[600, 0]]
+  "in_video": "/home/omer/work/auto_videos/out_1950_Driving_in_Toronto_-_Morning_rush_hour_on_highway_401_west__(Front_dash_cam).mp4.avi",
+  "out_video": "output_images/out.mp4",
+  "warped":  "True",
+  "src": [[56, 523], [1065, 523],[530, 455],[727, 455]],
+  "dest" : [[200, 580],[900, 580],[200, 0],[900, 0]]
 }
